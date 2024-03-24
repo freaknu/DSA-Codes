@@ -8,13 +8,25 @@ public:
             seg[index] = arr[low];
             return;
         }
-        int mid = (low + high) / 2;
+        int mid = (low + high) >> 1;
         build(2 * index + 1, low, mid);
         build(2 * index + 2, mid + 1, high);
         seg[index] = min(seg[2 * index + 1], seg[2 * index + 2]);
     }
-
-    void updateRange(int index, int low, int high, int left, int right, int value) {
+    void update(int index, int low, int high, int pos, int val) {
+        if (pos < low || pos > high)
+            return;
+        if (low == high) {
+            seg[index] = val;
+            return;
+        }
+        int mid = (low + high) >> 1 ;
+        update(2 * index + 1, low, mid, pos, val);
+        update(2 * index + 2, mid + 1, high, pos, val);
+        seg[index] = min(seg[2 * index + 1] , seg[2 * index + 2]);
+    }
+    void updateRange(int index, int low, int high, int left, int right, int value)
+    {
         if (lazy[index] != 0) {
             seg[index] += lazy[index];
             if (low != high) {
@@ -34,16 +46,16 @@ public:
             }
             return;
         }
-        int mid = (low + high) / 2;
-        update(2 * index + 1, low, mid, left, right, value);
-        update(2 * index + 2, mid + 1, high, left, right, value);
+        int mid = (low + high) >> 1;
+        updateRange(2 * index + 1, low, mid, left, right, value);
+        updateRange(2 * index + 2, mid + 1, high, left, right, value);
         seg[index] = min(seg[2 * index + 1], seg[2 * index + 2]);
     }
 
     int query(int index, int low, int high, int left, int right) {
         if (right < low || high < left) return INT_MAX;
         if (left <= low && high <= right) return seg[index];
-        int mid = (low + high) / 2;
+        int mid = (low + high) >> 1;
         int leftVal = query(2 * index + 1, low, mid, left, right);
         int rightVal = query(2 * index + 2, mid + 1, high, left, right);
         return min(leftVal, rightVal);
