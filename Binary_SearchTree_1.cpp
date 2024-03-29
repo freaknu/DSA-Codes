@@ -53,7 +53,6 @@ public:
         queue<Node *> q;
         if (root == NULL)
             return;
-        // Push Root into the q;
         q.push(root);
         q.push(NULL);
         while (!q.empty()) {
@@ -107,6 +106,33 @@ public:
         } else {
             root->Right = deleteNode(root->Right, X);
             return root;
+        }
+        return root;
+    }
+    Node* findPredecessor(Node* root) {
+        while (root->Right != nullptr) {
+            root = root->Right;
+        }
+        return root;
+    }
+
+    void morrisTraversal(Node* root) {
+        Node* current = root;
+        while (current != nullptr) {
+            if (current->Left == nullptr) {
+                cout << current->data << " ";
+                current = current->Right;
+            } else {
+                Node* predecessor = findPredecessor(current->Left);
+                if (predecessor->Right == nullptr) {
+                    predecessor->Right = current;
+                    current = current->Left;
+                } else {
+                    predecessor->Right = nullptr;
+                    cout << current->data << " ";
+                    current = current->Right;
+                }
+            }
         }
     }
 };
