@@ -1,5 +1,14 @@
 class BasicOperationMath {
 public:
+    int sieve[100005];
+    void generateSieve() {
+    for (int i = 2; i <= 100004; i++)sieve[i] = 1;
+    for (int i = 2; i * i <= 100004; i++) {
+        if (sieve[i] == 1) {
+            for (int j = 2 * i; j <= 100004; j += i) {sieve[j] = 0;}
+        }
+    }
+}
     int Power(int x, int y, int p) {
         int res = 1;
         x = x % p;
